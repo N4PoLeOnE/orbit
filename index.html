@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d16"><title>ORBIT — Un delicato disastro cosmico</title><link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23080d16'/%3E%3Ccircle cx='32' cy='32' r='12' fill='%23ffc481'/%3E%3Cellipse cx='32' cy='32' rx='28' ry='17' transform='rotate(-35 32 32)' fill='none' stroke='%2387dccc' stroke-width='3'/%3E%3C/svg%3E">
+</head>
+<body>
+  <canvas id="space" aria-label="Settore cosmico. Trascina sullo spazio vuoto per lanciare un corpo. Usa le quattro frecce della tastiera o il tasto destro per spostare la camera."></canvas>
+  <header class="hud">
+    <div class="brand"><span class="brand-mark">◉</span><div>ORBIT<small>UN DELICATO DISASTRO COSMICO</small></div></div>
+    <div class="score-box"><span class="eyebrow">PUNTEGGIO</span><strong id="score">000000</strong><span id="combo">×1 <i>prendi un rischio</i></span><div id="combo-meter" title="La combo scade dopo 9 secondi senza eventi"><span id="combo-fill"></span></div><span id="rank" class="rank">Polvere stellare · punti ×1.0</span></div>
+    <div class="sector"><span class="eyebrow" id="era">ERA 01 · GENESI</span><div class="stability"><span id="instability-fill"></span></div><span id="instability-label">Instabilità 0% · il cosmo respira</span></div>
+    <nav><button id="sound" class="icon-btn" title="Attiva o disattiva audio" aria-label="Attiva o disattiva audio">♫</button><button id="pause" class="icon-btn" title="Pausa (Spazio)" aria-label="Pausa">Ⅱ</button><button id="help" class="icon-btn" title="Come si gioca" aria-label="Come si gioca">?</button></nav>
+  </header>
+  <aside id="queue-panel">
+    <div class="panel-heading"><span class="eyebrow">PROSSIMI CORPI</span><span id="queue-count">3 / 5</span></div>
+    <div class="arrival"><span>Il cosmo non aspetta.</span><b id="countdown">14 s</b></div>
+    <div class="timer-track"><div id="timer-fill"></div></div>
+    <div id="queue"></div>
+    <div id="queue-warning">Coda piena: il prossimo arrivo<br>lancerà il primo corpo da solo.</div>
+    <p class="queue-hint">Piazza il primo.<br>Convivi con le conseguenze.</p>
+    <button id="catalog-button" class="text-btn">Atlante dei corpi ↗</button>
+    <button id="asteroid-tool" class="text-btn" title="Asteroide leggero per piccoli ritocchi. Ricarica 2 secondi; non consuma la coda.">↗ Micro-asteroide · massa 0,2</button>
+  </aside>
+  <aside id="contracts"><div class="panel-heading"><span class="eyebrow">CONTRATTI COSMICI</span><span id="contracts-done">0 completati</span></div><div id="contract-list"></div></aside>
+  <section id="selection" class="glass hidden"></section>
+  <div id="announce" aria-live="assertive"></div>
+  <div id="events" aria-live="polite"></div>
+  <div id="aim-info" class="hidden"></div>
+  <footer>
+    <div class="controls"><span><kbd>TRASCINA</kbd> lancia</span><span><kbd>CLIC</kbd> seleziona</span><span><kbd>DESTRO</kbd> sposta</span><span><kbd>ROTELLA</kbd> zoom</span></div>
+    <div class="camera-controls"><button id="zoom-out" title="Riduci zoom">−</button><span class="camera-key-hint" title="Tieni premute le frecce della tastiera per spostare la camera">← ↑ ↓ → Sposta</span><button id="follow-selected" title="Centra e segui il corpo selezionato" disabled>◎ Segui corpo</button><span id="zoom-label">100%</span><button id="zoom-in" title="Aumenta zoom">+</button></div>
+  </footer>
+  <div id="status-pill"><span class="live-dot"></span><span id="status-text">SETTORE 001</span><span class="divider">/</span><span id="body-count">1 corpo</span></div>
+  <div id="overlay" class="overlay">
+    <section id="welcome" class="modal welcome">
+      <div class="eyebrow accent">PICCOLE MASSE. GRANDI CONSEGUENZE.</div>
+      <h1>Metti in moto<br>l’<em>universo.</em></h1>
+      <p>Una luna. Una stella. Un pessimo tempismo.<br>Costruisci orbite, fai nascere la vita e tieni insieme<br>il tuo bellissimo, improbabile disastro.</p>
+      <div class="instructions"><div><b>01</b><span>Piazza il tuo primo pianeta vicino al Sole.</span></div><div><b>02</b><span>Trascina <strong>di lato, verso la fascia azzurra</strong>.</span></div><div><b>03</b><span>Una scia verde? Rilascia: la tua prima orbita.</span></div><div><b>04</b><span>Completa i <strong>contratti cosmici</strong> e raccogli la <strong>polvere di stelle</strong> ✦</span></div></div>
+      <label class="scenario-label" for="scenario">IL TUO ANGOLO DI COSMO</label>
+      <select id="scenario"><option value="genesis">Genesi · un Sole, infinite possibilità</option><option value="binary">Due soli · equilibrio precario</option><option value="abyss">L’abisso · un vicino molto pesante</option></select>
+      <button id="start" class="primary">Crea un universo <span>↗</span></button>
+      <small class="footnote">Un nuovo corpo ogni 14 secondi. Prima l’ordine. Poi le conseguenze.</small>
+    </section>
+    <section id="help-modal" class="modal hidden">
+      <div class="eyebrow accent">MANUALE PER DIVINITÀ DISTRATTE</div><h2>La sicurezza ti salva.<br>Il rischio fa punti.</h2>
+      <p>Trascina di lato rispetto alla stella, verso una delle fasce azzurre. Un’assistenza morbida corregge i piccoli errori. Durante la mira il cosmo rallenta al 12%: la coda continua ad arrivare.</p>
+      <p><span class="green">Verde</span>: orbita chiusa plausibile con le masse attuali. <span class="yellow">Giallo</span>: orbita stretta, eccentrica o perturbata. <span class="red">Rosso</span>: caduta, collisione o fuga prevista. Nuove masse possono cambiare tutto.</p>
+      <p>Per una Luna, avvicina il cursore a un pianeta: appare la <strong>zona satellite</strong>. Piazzala nella fascia e trascina di lato; il moto del pianeta è già incluso. Il verde richiede almeno due giri simulati. Le comete portano acqua e semi della vita ai pianeti abitabili che sfiorano.</p>
+      <p>Clic seleziona; destro trascina la camera; rotella regola lo zoom. Tieni premute le <strong>quattro frecce della tastiera</strong> per spostarti liberamente; <strong>Segui corpo</strong> segue quello selezionato. <strong>Spazio</strong> mette in pausa, <strong>Esc</strong> annulla il lancio. Le frecce del campo mostrano l’attrazione, anche lontano. La linea è la previsione; il tratteggio è un’ellisse stimata.</p>
+      <p>Il <strong>Micro-asteroide</strong> ritocca le traiettorie: massa 0,2, ricarica di 2 secondi, nessun consumo della coda. Un arrivo ogni 14 secondi, più rapido sotto 2 pezzi. A 5 posti occupati il prossimo arrivo lancia il primo. Orbite e vita danno punti; stelle e buchi neri sono eventi rari.</p>
+      <p><strong>Contratti cosmici</strong>: a sinistra hai sempre tre obiettivi. Completarli dà molti punti, toglie il 10% di instabilità e ogni due contratti sali di <strong>rango</strong>: ogni rango aggiunge +10% a tutti i punti. I contratti diventano più ambiziosi man mano che avanzi.</p>
+      <p><strong>Polvere di stelle ✦</strong>: compare spesso lungo le orbite dei tuoi pianeti. Qualsiasi pianeta, luna, cometa o micro-asteroide che la attraversa la raccoglie. Raccolte ravvicinate formano una catena con bonus crescente; dopo 42 secondi svanisce.</p>
+      <p>Impatto ed espulsione aumentano l’instabilità; orbite e vita la riducono. <strong>100% per 10 secondi</strong> provoca il collasso. Ogni errore prima di allora è un’altra possibilità.</p>
+      <button id="close-help" class="primary">Ho un universo da sistemare ↗</button>
+    </section>
+    <section id="end-modal" class="modal hidden"><div class="eyebrow accent">È STATO BELLISSIMO. QUASI.</div><h1>Ogni fine è<br>un <em>Big Bang.</em></h1><p id="end-description"></p><div id="end-stats"></div><button id="restart" class="primary">Riprova. Con più gravità. ↗</button><button id="back-menu" class="text-btn">Scegli un altro settore</button></section>
+  </div>
+  <div id="paused" class="hidden"><b>IL COSMO TRATTIENE IL RESPIRO</b><button id="resume" class="primary">Riprendi ↗</button><button id="pause-restart" class="text-btn">Ricomincia questo settore</button><button id="pause-menu" class="text-btn">Scegli un altro universo</button></div>
+  <dialog id="catalog"><div class="panel-heading"><div><span class="eyebrow accent">ATLANTE / 23 CORPI</span><h2>Conosci i tuoi problemi.</h2></div><button id="close-catalog" class="icon-btn" aria-label="Chiudi atlante">×</button></div><p>La massa decide l’attrazione. Il resto decide lo spettacolo.<br>Pianeti, comete e giganti frequenti; stelle e oggetti estremi più rari. Il micro-asteroide è sempre disponibile per piccoli ritocchi.</p><div id="catalog-grid"></div></dialog>
+  <script type="module" src="src/game.js"></script>
+</body></html>
